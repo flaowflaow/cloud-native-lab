@@ -39,12 +39,14 @@ Hands-on labs for the Docker Certified Associate exam.
 ---
 
 ## 🛠️ Current Project: Monitoring Stack (Dockerized)
-*A real-world implementation of Prometheus and Grafana.*
+*A high-availability implementation of Prometheus & Grafana with automated health monitoring.*
 
-**Key Features:**
-- ✅ **Isolation:** Frontend/Backend network separation.
-- ✅ **Resilience:** Healthchecks and resource limits configured.
-- ✅ **Persistence:** External volumes for long-term metric storage.
+### 🚀 Key Features
+* **Automated Metrics Discovery:** Pre-configured Prometheus targets for system and container health.
+* **Full-Stack Monitoring:** Deep visibility into PostgreSQL (Database) and Redis (Cache) performance.
+* **Smart Alerting:** Ready-to-use Grafana dashboards focused on resource bottleneck detection.
+* **Self-Healing Design:** Implemented Docker healthchecks to ensure service reliability and automatic recovery.
+* **Security First:** Isolated backend networking and encrypted secret management via environment variables.
 
 ---
 
