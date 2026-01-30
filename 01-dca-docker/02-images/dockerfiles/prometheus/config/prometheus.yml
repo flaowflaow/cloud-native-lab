@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # 1. Surveiller Prometheus lui-m?me
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # 2. Surveiller le Docker Engine (gr?ce ? ton daemon.json)
+  # Sur Linux, l'IP de l'h?te vue depuis le conteneur est souvent 172.17.0.1
+  - job_name: "docker-engine"
+    static_configs:
+      - targets: ["host.docker.internal:9323"]
