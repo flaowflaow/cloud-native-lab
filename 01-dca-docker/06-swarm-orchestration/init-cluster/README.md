@@ -1,65 +1,88 @@
-# 🚀 Swarm Services — Scaling & Self-Healing
+# 🏗️ Swarm Cluster Initialization
 
-In Docker Swarm, you don't run individual containers. Instead, you deploy **Services**. A service allows you to define the "desired state" of your application, and Swarm ensures that state is maintained across the cluster.
-
----
-
-## 📌 Concept: Task vs Service
-- **Service**: The definition of the workload (image, ports, replicas).
-- **Task**: The atomic unit of Swarm. It is the actual container running as part of a service.
+To start using Docker Swarm, you must first initialize a cluster. A cluster is a group of Docker engines (nodes) running in **Swarm Mode**. 
 
 ---
 
-## 🛠️ Essential Service Commands
+## 🎭 Node Roles: Managers vs. Workers
 
-### 1️⃣ Create a Service
-To deploy a service with 3 replicas (instances) across the cluster:
+In a Swarm cluster, every node has a specific role that determines its responsibilities within the orchestration.
 
-```bash
-docker service create --name web-server --replicas 3 -p 80:80 nginx:alpine
-```
-### 2️⃣ Scale a Service
-Need more power? Scale up or down instantly:
-```bash
-docker service scale web-server=5
-```
-### 3️⃣ Update a Service
-Update an image version without downtime (Rolling Update):
-```bash
-docker service update --image nginx:1.25.3 web-server
-```
+### 👑 Managers
+- **Cluster State**: They maintain the cluster's "Single Source of Truth" using the Raft log.
+- **Scheduling**: They decide which nodes will run specific containers (tasks).
+- **Control Plane**: They provide the API endpoint for cluster management.
+- **Note**: By default, Managers also act as Workers and can run tasks.
+
+### 👷 Workers
+- **Execution**: Their primary role is to execute the containers (tasks) assigned to them.
+- **Status Reporting**: They notify the Managers about the health and status of their tasks.
+
+
 
 ---
 
-## 📊 Management Table
+## 🚀 Initializing the Cluster
+
+### 1️⃣ Initialize the First Manager
+The cluster starts when you promote the first node to Manager:
+```bash
+docker swarm init --advertise-addr <MANAGER_IP>
+
+### 2️⃣ Adding Nodes
+To add a new node to the cluster, run the join command from the new node. Note that a node joins the cluster using a specific token that defines its future role.
+
+```bash
+# To join as a Worker
+docker swarm join --token <WORKER_TOKEN> <MANAGER_IP>:2377
+
+# To join as a Manager
+docker swarm join --token <MANAGER_TOKEN> <MANAGER_IP>:2377
+```
+
+
+---
+
+## ⚖️ Manager Quorum & High Availability (DCA Essential)
+
+Swarm uses the **Raft Consensus Algorithm** to ensure all managers agree on the cluster state. For the cluster to function, a **majority (Quorum)** of managers must be alive.
+
+### 🔢 The Quorum Formula
+To survive $N$ failures, you need $2N + 1$ managers.
+
+| Managers | Fault Tolerance | Quorum Needed |
+| :--- | :--- | :--- |
+| 1 | 0 | 1 |
+| 3 | 1 | 2 |
+| 5 | 2 | 3 |
+| 7 | 3 | 4 |
+
+
+
+> [!CAUTION]
+> **Why an odd number?** An odd number of managers ensures that in case of a network partition, only one side can maintain a majority, preventing a **"split-brain"** scenario. If the Quorum is lost, existing tasks keep running, but the cluster becomes **Read-Only** (no new services, no scaling).
+
+---
+
+## 📊 Node Management Table
 
 | Command | Action |
 | :--- | :--- |
-| `docker service ls` | List all running services |
-| `docker service ps <name>` | List the tasks (containers) of a specific service |
-| `docker service inspect --pretty <name>` | View service configuration in a readable format |
-| `docker service rm <name>` | Remove the service and its tasks |
-| `docker service logs -f <name>` | View aggregated logs from all replicas |
+| `docker node ls` | List all nodes and their status (Managers only) |
+| `docker node promote <NODE>` | Upgrade a Worker to a Manager |
+| `docker node demote <NODE>` | Downgrade a Manager to a Worker |
+| `docker node inspect <NODE>` | View detailed JSON info about a node |
+| `docker swarm leave --force` | Remove a node from the swarm |
 
 ---
 
-## 📋 DCA Exam Focus — Scaling & Self-Healing
+## 📋 DCA Exam Focus — Cluster Security
 
-### 🛡️ Self-Healing
-If a node fails or a container crashes, the Swarm Manager detects the gap between the **Actual State** and the **Desired State**. It automatically schedules new tasks (containers) on healthy nodes to reach the desired replica count again.
-
-### 🌐 Routing Mesh
-Docker Swarm uses a **Routing Mesh**. This means:
-- You can access any service using the IP of **any node** in the cluster.
-- The Routing Mesh automatically load-balances the incoming request to a node running the task.
+- **mTLS**: Swarm uses mutual TLS to encrypt all communication between nodes.
+- **Certificate Rotation**: Certificates are rotated every **90 days** by default (customizable via `docker swarm update`).
+- **Autolock**: You can protect the cluster's encryption key with `docker swarm update --autolock=true`. If enabled, Managers require a key to unlock after a restart.
 
 
-
-### 🔄 Update Policies
-You can control how updates happen:
-- `--update-parallelism`: Number of containers to update at once.
-- `--update-delay`: Time to wait between updating groups of containers.
-- `--update-failure-action`: What to do if an update fails (e.g., `pause` or `rollback`).
 
 ---
 *Maintainer: **DrLaBulle***

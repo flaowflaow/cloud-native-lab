@@ -70,4 +70,39 @@ You can control how updates happen:
 - `--update-failure-action`: What to do if an update fails (e.g., `pause` or `rollback`).
 
 ---
+
+## 🛠️ Node Maintenance: Drain Mode
+
+In a production environment, you often need to perform maintenance on a specific node (OS updates, hardware upgrade). Swarm allows you to evacuate a node gracefully.
+
+### 🔄 Availability States
+* **Active**: The node can receive and run new tasks (Default).
+* **Pause**: The node stops receiving new tasks, but existing ones keep running.
+* **Drain**: Existing tasks are shut down and rescheduled on other **Active** nodes.
+
+### 🛠️ How to Drain a Node
+To safely remove a node from the workload:
+```bash
+docker node update --availability drain <NODE_ID>
+```
+
+---
+
+## 📋 DCA Exam Focus — Scaling & Self-Healing (Continued)
+
+### ⚖️ Actual State vs. Desired State
+The Swarm Manager runs a **Reconciliation Loop**. Its only job is to ensure that the cluster's **Actual State** (what is currently running) matches your **Desired State** (what you requested in `docker service create`).
+
+
+
+### 🛰️ Routing Mesh Internal
+The Routing Mesh is the magic that allows any node to receive traffic for any service. Remember these technical points for the exam:
+
+* **IPVS (IP Virtual Server)**: The kernel-level technology used for load balancing.
+* **Layer 4**: It operates at the Transport layer (TCP/UDP), not Layer 7 (HTTP).
+* **Ingress Network**: The special overlay network that handles the Routing Mesh traffic.
+
+
+
+---
 *Maintainer: **DrLaBulle***
