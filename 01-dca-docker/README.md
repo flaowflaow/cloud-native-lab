@@ -1,60 +1,33 @@
-# 🐳 Lab 01: Full-Stack Microservices & Observability (DCA Prep)
+# 🐳 Docker Certified Associate (DCA) - Study Lab
 
-## 📌 Project Overview
-This laboratory simulates a complete, containerized production infrastructure. The primary goal is to validate key competencies for the **Docker Certified Associate (DCA)** certification by orchestrating a complex stack including databases, caching, and advanced monitoring tools.
+Welcome to my **DCA** certification preparation laboratory. This repository centralizes all theoretical concepts and practical hands-on exercises required to master the Docker ecosystem, from basic installation to complex orchestration.
 
-## 🏗️ Architecture Stack
-The project deploys 6 critical components working in synergy:
+## 🗺️ Learning Roadmap
 
-| Component | Technology | Role & Purpose |
-| :--- | :--- | :--- |
-| **Database** | **PostgreSQL 16** | Persistent storage for business data. |
-| **Cache** | **Redis** | Query acceleration and session management. |
-| **Observability** | **Prometheus** | Metric collection and time-series storage. |
-| **Visualization** | **Grafana** | Dashboard creation and visual alerting. |
-| **Monitoring** | **cAdvisor** | Real-time resource analysis of all containers. |
-| **Administration** | **Adminer** | Database management web interface. |
+This project is organized into 7 competency blocks aligned with the official Docker/Mirantis curriculum.
 
+| Block | Title | Status | Key Description |
+| :--- | :--- | :---: | :--- |
+| **01** | [Installation & Config](./01-install-config/) | ✅ | Daemon setup, storage drivers, and logging. |
+| **02** | [Image Management](./02-images/) | ✅ | Dockerfiles, Multi-stage builds, and Best practices. |
+| **03** | [Networking](./03-networking/) | ✅ | Bridge, Host, Overlay, and network isolation. |
+| **04** | [Storage](./04-storage/) | ✅ | Volumes, Bind Mounts, and persistence. |
+| **05** | [Security](./05-security/) | ✅ | Secrets, Linux Capabilities, and DCT (Notary). |
+| **06** | [Orchestration](./06-swarm-orchestration/) | 🚧 | Swarm Mode, Services, Stacks, and Scaling. |
+| **07** | [Registry](./07-registry/) | ⏳ | Private Registry setup and image management. |
 
+## 🚀 Lab Architecture
+The [labs-apps](./labs-apps/) directory contains real-world applications used to validate concepts. The root [docker-compose.yml](./docker-compose.yml) deploys a full observability stack (Prometheus, Grafana, cAdvisor).
 
----
+## 🛠️ Tools & Security
+* **Linter**: [Hadolint](./02-images/hadolint/) for Dockerfile validation.
+* **Security**: [Trivy](./02-images/trivy/) for vulnerability scanning.
+* **Orchestration**: Docker Swarm (Native).
 
-## 🎓 DCA & DevOps Concepts Demonstrated
-
-* **Complex Orchestration:** Using `depends_on` with `healthchecks` to ensure logical startup sequences.
-* **Isolated Networking:** Implementation of custom "Bridge" networks to isolate data flows (Backend vs. Frontend).
-* **Secret Management:** Handling credentials via `.env` files to prevent pushing plain-text passwords to GitHub.
-* **Storage Management:** Using **Named Volumes** to ensure data persistence across container lifecycles.
-* **Resource Constraints:** Defining CPU/RAM quotas to prevent local Denial of Service (DoS).
-
----
-
-## 🚀 Getting Started
-
-1.  **Enter the lab directory:**
-    ```bash
-    cd 01-dca-docker
-    ```
-
-2.  **Configure the environment:**
-    * Create a `.env` file based on the required variables (Passwords, Users).
-
-3.  **Launch the infrastructure:**
-    ```bash
-    docker compose up -d
-    ```
-
-4.  **Access services:**
-    * **Grafana:** `http://localhost:3000` (Default: admin/admin)
-    * **Prometheus:** `http://localhost:9090`
-    * **Adminer:** `http://localhost:8080`
+## 📚 Resources & Certification
+* **Objective**: Docker Certified Associate (DCA).
+* **Author**: **DrLaBulle**
+* **Last Updated**: January 2026
 
 ---
-
-## 🛠️ Evolution Roadmap
-- [ ] Migrate the stack to **Docker Swarm**.
-- [ ] Add a **Reverse Proxy (Traefik)** for SSL management.
-- [ ] Automate deployment via **GitHub Actions**.
-
----
-*Repository maintained by **dr_labulle** as part of the Azure DevOps Engineer path.*
+*Each subdirectory contains its own detailed guide and hands-on exercises.*
