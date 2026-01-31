@@ -18,6 +18,26 @@ docker network create -d macvlan \
 # Attach a container
 docker run -itd --network my-macvlan-net --name direct-node alpine
 ```
-⚠️ Warning: Communication between the Docker host and its own Macvlan containers is forbidden by the Linux kernel for security reasons.
+---
 
-Maintainer: DrLaBulle
+## ⚠️ Warning & Security
+
+### 🔒 Host Isolation
+By default, the **Docker host cannot communicate with its own Macvlan containers**. This is a security restriction of the Linux kernel's macvlan driver. If you need the host to talk to the containers, you must create a specific macvlan bridge on the host side.
+
+### 🔌 Promiscuous Mode
+The parent interface (e.g., `eth0`) must support **promiscuous mode** to allow multiple MAC addresses to be associated with a single physical interface. On cloud providers (AWS, GCP, Azure), Macvlan is often unsupported because their networks block unknown MAC addresses.
+
+---
+
+## 📋 DCA Note: The "None" Network
+
+Don't forget the **none** driver for the exam. 
+- **Usage**: `docker run --network none alpine`
+- **Effect**: The container has no external network interfaces, only a **loopback (`lo`)** interface.
+- **Use Case**: Highest level of isolation for batch processing or security-sensitive computations that don't need network access.
+
+
+
+---
+*Maintainer: **DrLaBulle***

@@ -21,7 +21,18 @@ The `overlay` driver enables communication between containers running on differe
 * **Prerequisite**: Swarm mode must be active (`docker swarm init`).
 * **Feature**: It creates a distributed network across all nodes in the cluster.
 
+### 🔑 Critical Ports (MUST memorize for DCA)
+To allow Overlay traffic, these ports must be open in your firewall:
+- **2377/TCP**: Cluster management.
+- **7946/TCP & UDP**: Node discovery (Gossip).
+- **4789/UDP**: Data plane traffic (VXLAN).
 
+
+### 🛠️ Hands-on
+```bash
+# Create an encrypted overlay network
+docker network create -d overlay --opt encrypted my-multi-host-net
+```
 
 ---
 *Maintainer: **DrLaBulle***
