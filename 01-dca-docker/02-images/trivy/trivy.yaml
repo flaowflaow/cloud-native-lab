@@ -1,0 +1,7 @@
+# Trivy Security Configuration
+scan:
+  type: 'image'
+  format: 'table'
+  exit-code: 0
+  severity: 'HIGH,CRITICAL'
+  ignore-unfixed: true
