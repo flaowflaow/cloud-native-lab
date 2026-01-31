@@ -1,41 +1,20 @@
-# 🌐 Networking & Persistence Strategy
+# 🛠️ Block 03: Docker Networking & Connectivity
 
-This block focuses on the "glue" that connects our services while maintaining a strict security posture through network isolation and data persistence.
+This block covers the fundamental and advanced networking concepts required for the **DCA (Docker Certified Associate)** exam.
 
-## 🏗️ Network Architecture
-We use a **Three-Tier Isolation** strategy to minimize the attack surface:
+## 📋 Essential Commands Cheat Sheet
 
-| Network | Type | Purpose |
-| :--- | :--- | :--- |
-| `net-back` | **Internal** | Isolated layer for Database (Postgres) and Cache (Redis). No internet access. |
-| `net-admin` | Bridge | Management layer for Adminer to access the backend. |
-| `net-monitor`| Bridge | Metrics collection layer for Prometheus, cAdvisor, and Grafana. |
+| Command | Description |
+| :--- | :--- |
+| `docker network ls` | List all networks available on the host. |
+| `docker network inspect <net_name>` | View detailed configuration (IPAM, Subnet, Gateway). |
+| `docker network create -d <driver> <name>` | Create a new network with a specific driver. |
+| `docker network connect <net> <container>` | Hot-plug a running container into a network. |
+| `docker network prune` | Cleanup all unused networks. |
 
+## 🧪 Experiments included:
+1. **[Bridge/Host/Overlay](./bridge-host-overlay/)**: Understanding isolation and performance trade-offs.
+2. **[Macvlan](./macvlan/)**: Advanced L2 networking for specific infrastructure needs.
 
-
-## 💾 Data Persistence
-To ensure no data loss occurs when containers are recreated, we use **Named Volumes**:
-* `postgres_data`: Persists the SQL database state.
-* `prometheus_data`: Stores historical time-series metrics.
-
-## 🚀 Orchestration
-The entire stack is managed via `docker-compose.yml`. This ensures that:
-1. Networks are created before services start.
-2. Services are attached to the correct isolated segments.
-3. Volumes are mapped to the correct mount points.
-
-### Deployment Command
-```bash
-docker compose up -d
-```
-
-### 🔍 Verification Commands
-```bash
-# Check network isolation
-docker network inspect net-back
-
-# List active volumes
-docker volume ls
-```
-
-Maintainer: DrLaBulle
+---
+*Maintainer: **DrLaBulle***
