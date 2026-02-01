@@ -37,6 +37,23 @@ docker service update --image nginx:1.25.3 web-server
 
 ---
 
+## 🔄 Service Deployment Modes
+
+When creating a service, Docker Swarm allows you to define how tasks are distributed across the nodes using the `--mode` flag.
+
+### 1. Replicated Mode (Default)
+The swarm manager distributes a specific number of replica tasks among the nodes based on the scale you specify.
+* **Command**: `docker service create --name web --replicas 3 nginx`
+* **Use Case**: Standard web applications and microservices.
+
+### 2. Global Mode
+The swarm manager runs exactly one task for the service on every available node in the cluster that complies with the service's constraints.
+* **Command**: `docker service create --name agent --mode global prom/node-exporter`
+* **Use Case**: Monitoring agents, anti-virus scanners, or log collectors that must run on every node.
+
+
+---
+
 ## 📊 Management Table
 
 | Command | Action |
